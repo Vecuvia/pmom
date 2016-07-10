@@ -113,7 +113,10 @@ def flatten(tree, level=0):
         out += flatten(child, level+1)
     return out
 
-from pprint import pprint
-tree = make_tree(parse(open("test.org").read()))
-#print(flatten(tree))
-print(render(tree, open("style.css")))
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+    with open(filename, "r") as file:
+        with open("style.css", "r") as stylesheet:
+            print(render(make_tree(parse(file.read())),
+                stylesheet=stylesheet))
