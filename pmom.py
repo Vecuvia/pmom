@@ -96,6 +96,24 @@ def print_tree(tree, level=0):
     for child in tree["children"]:
         print_tree(child, level+1)
 
+def flatten(tree, level=0):
+    out = ""
+    out += "*" * level
+    if out: out += " "
+    if "state" in tree and tree["state"]:
+        out += tree["state"] + " "
+    if "title" in tree:
+        out += tree["title"]
+    if "tags" in tree and tree["tags"]:
+        out += " :{0}:".format(":".join(tree["tags"]))
+    if tree["text"]:
+        out += "\n" + tree["text"]
+    out += "\n"
+    for child in tree["children"]:
+        out += flatten(child, level+1)
+    return out
+
 from pprint import pprint
 tree = make_tree(parse(open("test.org").read()))
+#print(flatten(tree))
 print(render(tree, open("style.css")))
