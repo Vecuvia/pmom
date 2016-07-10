@@ -4,26 +4,6 @@ try:
 except ImportError:
     formatter = lambda s: "".join("<p>" + p + "</p>" for p in s.splitlines() if p)
 
-test = """pmo-m
-
-(poor man's org-mode)
-
-* TODO Some text
-This is the body text.
-
-** Second level title
-It could be used as a simple outliner
-
-** TODO Text :tag:tag:
-
-* First level 1
-
-** Second level 2
-
-* First level 2
-
-"""
-
 STATES = ["TODO", "DONE"]
 
 def count(char, line):
@@ -92,6 +72,22 @@ def to_html(tree):
         out += "</ul>"
     return out
 
+def render(tree, stylesheet, title="(untitled)"):
+    return """<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{1}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+{2}
+</style>
+</head>
+<body>
+{0}
+</body>
+</html>""".format(to_html(tree), title, stylesheet.read())
+
 def print_tree(tree, level=0):
     if "title" in tree:
         print(("  " * (level-1)) + "* " + tree["title"])
@@ -101,7 +97,5 @@ def print_tree(tree, level=0):
         print_tree(child, level+1)
 
 from pprint import pprint
-tree = make_tree(parse(test))
-#pprint(tree)
-#print_tree(tree)
-print(to_html(tree))
+tree = make_tree(parse(open("test.org").read()))
+print(render(tree, open("style.css")))
