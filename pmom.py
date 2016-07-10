@@ -1,3 +1,4 @@
+#Disclaimer: I don't even know why I wrote this
 try:
     import markdown
     formatter = markdown.markdown
