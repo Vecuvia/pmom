@@ -35,6 +35,9 @@ def parse_header(line):
     }
 
 def parse(text):
+    """
+    Parses an org-mode file to a flat list of nodes.
+    """
     out = [{"level": 0, "text": "", "children": []}]
     for line in text.splitlines():
         if line.startswith("*"):
@@ -44,6 +47,9 @@ def parse(text):
     return out
 
 def make_tree(iterable, item=0):
+    """
+    Converts a flat list of nodes into a tree.
+    """
     tree = iterable[item]
     i = item + 1
     while i < len(iterable):
@@ -55,6 +61,9 @@ def make_tree(iterable, item=0):
     return tree
 
 def to_html(tree):
+    """
+    Converts `tree` to HTML.
+    """
     out = ""
     if "state" in tree and tree["state"]:
         out += "<strong class=\"{0}\">{0}</strong> ".format(tree["state"])
@@ -73,6 +82,9 @@ def to_html(tree):
     return out
 
 def render(tree, stylesheet, title="(untitled)"):
+    """
+    Creates a standalone HTML page from a tree of notes.
+    """
     return """<!doctype html>
 <html>
 <head>
@@ -89,6 +101,9 @@ def render(tree, stylesheet, title="(untitled)"):
 </html>""".format(to_html(tree), title, stylesheet.read())
 
 def print_tree(tree, level=0):
+    """
+    Outputs a rough textual representation of the tree.
+    """
     if "title" in tree:
         print(("  " * (level-1)) + "* " + tree["title"])
     if tree["text"].strip():
@@ -97,6 +112,10 @@ def print_tree(tree, level=0):
         print_tree(child, level+1)
 
 def flatten(tree, level=0):
+    """
+    "Flattens" the tree back to its flat, textual representation. Not quite
+    working yet.
+    """
     out = ""
     out += "*" * level
     if out: out += " "
